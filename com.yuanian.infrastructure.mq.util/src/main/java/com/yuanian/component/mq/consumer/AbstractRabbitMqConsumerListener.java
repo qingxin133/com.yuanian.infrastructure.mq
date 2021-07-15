@@ -6,7 +6,7 @@ import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.epoch.infrastructure.util.service.CurrentUserUtils;
 import com.epoch.infrastructure.util.service.loginsubject.ISubject;
 import com.rabbitmq.client.Channel;
-import com.yuanian.component.mq.constant.ConsumerConstant;
+import com.yuanian.component.mq.constant.HeadersEnum;
 import com.yuanian.component.mq.constant.PublisherConstant;
 import com.yuanian.component.mq.publisher.EcsMQMessageUtil;
 import com.yuanian.component.mq.util.EcsMQObjectUtils;
@@ -36,10 +36,14 @@ public abstract class AbstractRabbitMqConsumerListener implements IDynamicConsum
     private static final Logger logger = LoggerFactory.getLogger(AbstractRabbitMqConsumerListener.class);
 
     private volatile boolean end = false;
+
     private SimpleMessageListenerContainer container;
+
     private boolean autoAck;
 
-//    private AbstractMQConsumer ecsMqConsumer;
+    /**
+     * AbstractMQConsumer的上层接口
+     */
     private IMessageHandler messageHandler;
 
     private String defaultSubjectPath;
@@ -63,11 +67,11 @@ public abstract class AbstractRabbitMqConsumerListener implements IDynamicConsum
         this.container = container;
         autoAck = container.getAcknowledgeMode().isAutoAck();
     }
+
     @Override
     public void shutdown() {
         end = true;
     }
-
 
     /**
      * 增强方法
@@ -106,8 +110,8 @@ public abstract class AbstractRabbitMqConsumerListener implements IDynamicConsum
      * @Return void
      */
     protected void removeReadOnlyColumn(Map<String, Object> headers) {
-        headers.remove(ConsumerConstant.ID);
-        headers.remove(ConsumerConstant.TIMESTAMP);
+        headers.remove(HeadersEnum.ID.getCode());
+        headers.remove(HeadersEnum.TIMESTAMP.getCode());
     }
 
     /**
@@ -173,6 +177,7 @@ public abstract class AbstractRabbitMqConsumerListener implements IDynamicConsum
 
     /**
      * 反序列化用户信息，放在线程变量中
+     * @deprecated 没找到不用报错，方法外自行判断要不要继续处理
      * @param defaultSubjectPath
      */
     protected Class checkClassExist(String defaultSubjectPath){

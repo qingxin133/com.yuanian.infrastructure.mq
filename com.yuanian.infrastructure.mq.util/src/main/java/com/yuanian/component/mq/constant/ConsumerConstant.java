@@ -26,9 +26,9 @@ public class ConsumerConstant {
 
     public static final String HEADERS =  "headers";
 
-    public static final String ID =  "id";
-
-    public static final String TIMESTAMP =  "timestamp";
+//    public static final String ID =  "id";
+//
+//    public static final String TIMESTAMP =  "timestamp";
 
 
 }
